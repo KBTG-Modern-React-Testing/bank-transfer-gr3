@@ -26,7 +26,13 @@ export default function ThemeToggle(): ReactElement | null {
   if (!mounted) return null;
 
   return (
-    <button className={styles.toggleBtn} onClick={toggleTheme} aria-label="Toggle Theme">
+    <button
+      type="button"
+      className={styles.toggleBtn}
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      aria-pressed={theme === "light"}
+    >
       {theme === "dark" ? "☀️" : "🌙"}
     </button>
   );
