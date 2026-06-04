@@ -102,7 +102,7 @@ export default function TransferForm({
             disabled={isSubmitting}
             required
             aria-required="true"
-            aria-invalid={formError ? "true" : "false"}
+            aria-invalid={errors ? "true" : "false"}
           />
           {errors.amount && (
             <p className="mt-1 text-sm text-red-600">{errors.amount.message}</p>
