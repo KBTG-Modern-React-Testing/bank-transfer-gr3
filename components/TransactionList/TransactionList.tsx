@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, ReactElement } from "react";
+import { useState, useMemo, useEffect, ReactElement } from "react";
 import { Transaction, TxStatus } from "../../types";
 import cardStyles from "../Card/Card.module.css";
 import styles from "./TransactionList.module.css";
@@ -11,11 +11,36 @@ interface Props {
 
 export default function TransactionList({ transactions }: Props): ReactElement {
   const [filter, setFilter] = useState<TxStatus | "all">("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const filteredTransactions = useMemo(() => {
     if (filter === "all") return transactions;
     return transactions.filter(t => t.status === filter);
   }, [transactions, filter]);
+
+  const totalPages = Math.ceil(filteredTransactions.length / pageSize) || 1;
+
+  // Reset to page 1 whenever filter or page size changes.
+  useEffect(() => {
+    setTimeout(() => {
+      setCurrentPage(1);
+    }, 0);
+  }, [filter, pageSize]);
+  
+  // Also ensure currentPage does not exceed totalPages if transactions array shrinks
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setTimeout(() => {
+        setCurrentPage(totalPages);
+      }, 0);
+    }
+  }, [totalPages, currentPage]);
+
+  const currentTransactions = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredTransactions.slice(startIndex, startIndex + pageSize);
+  }, [filteredTransactions, currentPage, pageSize]);
 
   return (
     <section className={cardStyles.card} aria-labelledby="recent-transactions-heading">
@@ -40,12 +65,12 @@ export default function TransactionList({ transactions }: Props): ReactElement {
       </div>
 
       <ul className={styles.transactionList} aria-live="polite" aria-relevant="additions text">
-        {filteredTransactions.length === 0 ? (
+        {currentTransactions.length === 0 ? (
           <li className={styles.transactionEmpty} role="status">
             No transactions found.
           </li>
         ) : (
-          filteredTransactions.map(tx => {
+          currentTransactions.map(tx => {
             const statusClass = tx.status === 'completed' ? styles.statusCompleted : tx.status === 'pending' ? styles.statusPending : styles.statusFailed;
             const amountClass = tx.amount > 0 ? styles.txAmountPositive : styles.txAmountNegative;
             const amountText = `${tx.amount > 0 ? '+' : ''}$${Math.abs(tx.amount).toFixed(2)}`;
@@ -79,6 +104,44 @@ export default function TransactionList({ transactions }: Props): ReactElement {
           })
         )}
       </ul>
+      
+      {filteredTransactions.length > 0 && (
+        <div className={styles.pagination}>
+          <div className={styles.pageInfo}>
+            Page {currentPage} of {totalPages} ({filteredTransactions.length} items)
+          </div>
+          <div className={styles.pageControls}>
+            <select 
+              value={pageSize} 
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className={styles.pageSelect}
+              aria-label="Items per page"
+            >
+              <option value={5}>5 per page</option>
+              <option value={10}>10 per page</option>
+              <option value={20}>20 per page</option>
+            </select>
+            <button 
+              type="button"
+              className={styles.pageBtn} 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              aria-label="Previous page"
+            >
+              Prev
+            </button>
+            <button 
+              type="button"
+              className={styles.pageBtn} 
+              disabled={currentPage >= totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              aria-label="Next page"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
