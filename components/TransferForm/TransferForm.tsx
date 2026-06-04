@@ -1,121 +1,138 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useState, FormEvent, ReactElement } from "react";
 import cardStyles from "../Card/Card.module.css";
 import styles from "./TransferForm.module.css";
+import {
+  createTransactionSchema,
+  type CreateTransactionInput,
+} from "@/types/transaction";
 
 interface Props {
   balance: number;
   onTransfer: (amount: number, recipient: string, note: string) => void;
 }
 
-export default function TransferForm({ balance, onTransfer }: Props): ReactElement {
-  const [form, setForm] = useState({ recipient: "", amount: "", note: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formError, setFormError] = useState("");
+export default function TransferForm({
+  balance,
+  onTransfer,
+}: Props): ReactElement {
+  // const [form, setForm] = useState({ recipient: "", amount: "", note: "" });
+  // const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const sanitizeSqlInput = (value: string) => {
-    return value
-      .trim()
-      .replace(/--/g, "")
-      .replace(/;/g, "")
-      .replace(/'/g, "''")
-      .replace(/"/g, '""');
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+    // reset,
+  } = useForm<CreateTransactionInput>({
+    resolver: zodResolver(createTransactionSchema),
+  });
+
+  const handleTransfer = (data: CreateTransactionInput) => {
+    if (data.amount > balance) {
+      setError("amount", {
+        type: "validate",
+        message: "Insufficient funds",
+      });
+      return;
+    }
+
+    onTransfer(data.amount, data.recipient, data.description ?? "");
+    // reset();
   };
 
-  const handleTransfer = (e: FormEvent) => {
-    e.preventDefault();
+  // const handleTransfer = (e: FormEvent) => {
+  //   e.preventDefault();
+  //   if (!form.recipient || !form.amount) return;
 
-    const recipient = sanitizeSqlInput(form.recipient);
-    const note = sanitizeSqlInput(form.note);
+  //   const amountNum = parseFloat(form.amount);
+  //   if (isNaN(amountNum) || amountNum <= 0) return;
+  //   if (amountNum > balance) {
+  //     alert("Insufficient funds!");
+  //     return;
+  //   }
 
-    if (!recipient || !form.amount) {
-      setFormError("Recipient and amount are required.");
-      return;
-    }
+  //   setIsSubmitting(true);
 
-    const amountNum = parseFloat(form.amount);
-    if (isNaN(amountNum) || amountNum <= 0) {
-      setFormError("Enter a valid amount greater than zero.");
-      return;
-    }
-
-    if (amountNum > balance) {
-      setFormError("Insufficient funds.");
-      return;
-    }
-
-    setFormError("");
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      onTransfer(amountNum, recipient, note);
-      setForm({ recipient: "", amount: "", note: "" });
-      setIsSubmitting(false);
-    }, 800);
-  };
+  //   setTimeout(() => {
+  //     onTransfer(amountNum, form.recipient, form.note);
+  //     setForm({ recipient: "", amount: "", note: "" });
+  //     setIsSubmitting(false);
+  //   }, 800);
+  // };
 
   return (
-    <section className={cardStyles.card} aria-labelledby="transfer-form-heading">
-      <h2 id="transfer-form-heading" className={cardStyles.cardTitle}>Transfer Money</h2>
-      <form onSubmit={handleTransfer} noValidate>
+    <section className={cardStyles.card}>
+      <h2 className={cardStyles.cardTitle}>Transfer Money</h2>
+      <form onSubmit={handleSubmit((data) => handleTransfer(data))}>
         <div className={styles.formGroup}>
-          <label htmlFor="recipient">Recipient</label>
+          <label>Recipient</label>
           <input
-            id="recipient"
             type="text"
             className={styles.formControl}
             placeholder="Name or Email"
-            value={form.recipient}
-            onChange={e => setForm({ ...form, recipient: e.target.value })}
+            // value={form.recipient}
+            // onChange={(e) => setForm({ ...form, recipient: e.target.value })}
+            {...register("recipient")}
+            disabled={isSubmitting}
             required
             aria-required="true"
           />
+          {errors.recipient && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.recipient.message}
+            </p>
+          )}
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="amount">Amount ($)</label>
+          <label>Amount ($)</label>
           <input
-            id="amount"
             type="number"
             className={styles.formControl}
             placeholder="0.00"
             min="0.01"
             step="0.01"
-            value={form.amount}
-            onChange={e => setForm({ ...form, amount: e.target.value })}
+            // value={form.amount}
+            // onChange={(e) => setForm({ ...form, amount: e.target.value })}
+            {...register("amount", { valueAsNumber: true })}
+            disabled={isSubmitting}
             required
             aria-required="true"
             aria-invalid={formError ? "true" : "false"}
           />
+          {errors.amount && (
+            <p className="mt-1 text-sm text-red-600">{errors.amount.message}</p>
+          )}
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="note">Note (Optional)</label>
+          <label>Note (Optional)</label>
           <input
-            id="note"
             type="text"
             className={styles.formControl}
             placeholder="What is this for?"
-            value={form.note}
-            onChange={e => setForm({ ...form, note: e.target.value })}
+            {...register("description")}
+            disabled={isSubmitting}
+            // value={form.note}
+            // onChange={(e) => setForm({ ...form, note: e.target.value })}
           />
+          {errors.description && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.description.message}
+            </p>
+          )}
         </div>
-
-        <button type="submit" className={styles.btnPrimary} disabled={isSubmitting}>
+        <button
+          type="submit"
+          className={styles.btnPrimary}
+          disabled={isSubmitting}
+        >
           {isSubmitting ? "Processing..." : "Send Money"}
         </button>
       </form>
-
-      {formError ? (
-        <div className={styles.formErrorOverlay} role="alertdialog" aria-modal="true" aria-labelledby="transfer-error-title">
-          <div className={styles.formErrorPopup} onClick={e => e.stopPropagation()}>
-            <h3 id="transfer-error-title" className={styles.errorTitle}>Transfer error</h3>
-            <p className={styles.errorMessage}>{formError}</p>
-            <button type="button" className={styles.closeButton} onClick={() => setFormError("")}>
-              OK
-            </button>
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }
