@@ -39,9 +39,9 @@ export default function TransactionList({ transactions }: Props): ReactElement {
         ))}
       </div>
 
-      <ul className={styles.transactionList}>
+      <ul className={styles.transactionList} aria-live="polite" aria-relevant="additions text">
         {filteredTransactions.length === 0 ? (
-          <li className={styles.transactionEmpty} role="status" aria-live="polite">
+          <li className={styles.transactionEmpty} role="status">
             No transactions found.
           </li>
         ) : (
@@ -57,9 +57,9 @@ export default function TransactionList({ transactions }: Props): ReactElement {
                 aria-label={`${tx.recipient} ${tx.status} transaction for ${amountText} on ${tx.date}. Note: ${tx.note}`}
               >
                 <div className={styles.txInfo}>
-                  <div className={styles.txIcon} aria-hidden="true">
+                  <span className={styles.txIcon} aria-hidden="true">
                     {tx.type === 'deposit' ? '↓' : '↑'}
-                  </div>
+                  </span>
                   <span className="sr-only">{tx.type === 'deposit' ? 'Deposit' : 'Transfer'}</span>
                   <div>
                     <h4 className={styles.txDetailsH4}>{tx.recipient}</h4>

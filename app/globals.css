@@ -152,6 +152,15 @@ body {
   border: 0;
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(139, 92, 246, 0.95);
+  outline-offset: 3px;
+}
+
 /* Background animated liquid orbs */
 body::before, body::after {
   content: "";
