@@ -29,6 +29,8 @@
   --btn-bg: rgba(255, 255, 255, 0.05);
   --btn-border: rgba(255, 255, 255, 0.2);
   --btn-hover-bg: rgba(255, 255, 255, 0.1);
+  --error-popup-bg: rgba(15, 23, 42, 0.96);
+  --error-popup-border: rgba(255, 255, 255, 0.18);
   
   --tx-item-bg: rgba(255, 255, 255, 0.025);
   --tx-item-border: rgba(255, 255, 255, 0.06);
@@ -74,6 +76,8 @@
   --btn-bg: rgba(139, 92, 246, 0.1);
   --btn-border: rgba(139, 92, 246, 0.2);
   --btn-hover-bg: rgba(139, 92, 246, 0.15);
+  --error-popup-bg: rgba(255, 255, 255, 0.96);
+  --error-popup-border: rgba(148, 163, 184, 0.2);
   
   --tx-item-bg: rgba(255, 255, 255, 0.6);
   --tx-item-border: rgba(0, 0, 0, 0.05);

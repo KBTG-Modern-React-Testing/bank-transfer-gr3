@@ -14,10 +14,22 @@ export default function TransferForm({ balance, onTransfer }: Props): ReactEleme
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
+  const sanitizeSqlInput = (value: string) => {
+    return value
+      .trim()
+      .replace(/--/g, "")
+      .replace(/;/g, "")
+      .replace(/'/g, "''")
+      .replace(/"/g, '""');
+  };
+
   const handleTransfer = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!form.recipient || !form.amount) {
+    const recipient = sanitizeSqlInput(form.recipient);
+    const note = sanitizeSqlInput(form.note);
+
+    if (!recipient || !form.amount) {
       setFormError("Recipient and amount are required.");
       return;
     }
@@ -37,7 +49,7 @@ export default function TransferForm({ balance, onTransfer }: Props): ReactEleme
     setIsSubmitting(true);
 
     setTimeout(() => {
-      onTransfer(amountNum, form.recipient, form.note);
+      onTransfer(amountNum, recipient, note);
       setForm({ recipient: "", amount: "", note: "" });
       setIsSubmitting(false);
     }, 800);
@@ -88,16 +100,22 @@ export default function TransferForm({ balance, onTransfer }: Props): ReactEleme
           />
         </div>
 
-        {formError ? (
-          <p className={styles.formError} role="alert" aria-live="assertive">
-            {formError}
-          </p>
-        ) : null}
-
         <button type="submit" className={styles.btnPrimary} disabled={isSubmitting}>
           {isSubmitting ? "Processing..." : "Send Money"}
         </button>
       </form>
+
+      {formError ? (
+        <div className={styles.formErrorOverlay} role="alertdialog" aria-modal="true" aria-labelledby="transfer-error-title">
+          <div className={styles.formErrorPopup} onClick={e => e.stopPropagation()}>
+            <h3 id="transfer-error-title" className={styles.errorTitle}>Transfer error</h3>
+            <p className={styles.errorMessage}>{formError}</p>
+            <button type="button" className={styles.closeButton} onClick={() => setFormError("")}>
+              OK
+            </button>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

@@ -32,6 +32,53 @@
   box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
   background: var(--input-focus-bg);
 }
+.formErrorOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 50;
+}
+.formErrorPopup {
+  width: min(100%, 440px);
+  background: var(--error-popup-bg);
+  border: 1px solid var(--error-popup-border);
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: var(--liquid-glass-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--text-primary);
+}
+.errorTitle {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.errorMessage {
+  margin: 0 0 1.5rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.closeButton {
+  width: 100%;
+  padding: 1rem;
+  color: var(--text-primary);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.closeButton:hover {
+  background: var(--btn-hover-bg);
+}
 .btnPrimary {
   width: 100%;
   padding: 1.2rem;
