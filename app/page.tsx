@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Transaction } from "../types";
 import Header from "../components/Header/Header";
 import BalanceCard from "../components/BalanceCard/BalanceCard";
@@ -18,6 +18,35 @@ const initialTransactions: Transaction[] = [
 export default function Home() {
   const [balance, setBalance] = useState<number>(12450.75);
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedBalance = localStorage.getItem("bank_balance");
+    const savedTransactions = localStorage.getItem("bank_transactions");
+    
+    setTimeout(() => {
+      if (savedBalance) {
+        setBalance(parseFloat(savedBalance));
+      }
+      if (savedTransactions) {
+        try {
+          setTransactions(JSON.parse(savedTransactions));
+        } catch (e) {
+          console.error("Failed to parse transactions", e);
+        }
+      }
+      setIsLoaded(true);
+    }, 0);
+  }, []);
+
+  // Save to localStorage when state changes
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("bank_balance", balance.toString());
+      localStorage.setItem("bank_transactions", JSON.stringify(transactions));
+    }
+  }, [balance, transactions, isLoaded]);
 
   const handleTransfer = (amountNum: number, recipient: string, note: string) => {
     setBalance(prev => prev - amountNum);
@@ -40,6 +69,10 @@ export default function Home() {
       );
     }, 3000);
   };
+
+  if (!isLoaded) {
+    return <div className="container" style={{ minHeight: '100vh' }} />;
+  }
 
   return (
     <div className="container">

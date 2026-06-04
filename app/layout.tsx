@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aura Bank Dashboard",
+  title: "React Bank Dashboard",
   description: "Premium banking experience",
 };
 

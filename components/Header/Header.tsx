@@ -5,7 +5,7 @@ import styles from "./Header.module.css";
 export default function Header(): ReactElement {
   return (
     <header className={styles.header}>
-      <h1 className={styles.headerTitle}>Aura Bank</h1>
+      <h1 className={styles.headerTitle}>React Bank</h1>
       <div className={styles.userInfo}>
         <ThemeToggle />
         <div className={styles.userText}>
