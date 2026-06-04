@@ -1,0 +1,46 @@
+.card {
+  background: var(--liquid-glass-bg);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--liquid-glass-border);
+  border-radius: 2rem;
+  padding: 2.5rem;
+  -webkit-box-shadow: var(--liquid-glass-shadow);
+  -moz-box-shadow: var(--liquid-glass-shadow);
+  box-shadow: var(--liquid-glass-shadow);
+  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), -webkit-box-shadow 0.5s ease;
+  -moz-transition: -moz-transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), -moz-box-shadow 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 100%;
+  background: -webkit-linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%);
+  background: -moz-linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%);
+  border-radius: 2rem;
+  pointer-events: none;
+}
+
+.card:hover {
+  -webkit-transform: translateY(-8px);
+  -moz-transform: translateY(-8px);
+  -ms-transform: translateY(-8px);
+  transform: translateY(-8px);
+  -webkit-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  -moz-box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+}

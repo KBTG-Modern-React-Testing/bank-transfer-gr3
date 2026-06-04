@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Transaction } from "../types";
-import Header from "../components/Header";
-import BalanceCard from "../components/BalanceCard";
-import TransferForm from "../components/TransferForm";
-import TransactionList from "../components/TransactionList";
+import Header from "../components/Header/Header";
+import BalanceCard from "../components/BalanceCard/BalanceCard";
+import TransferForm from "../components/TransferForm/TransferForm";
+import TransactionList from "../components/TransactionList/TransactionList";
+import styles from "./page.module.css";
 
 const initialTransactions: Transaction[] = [
   { id: "tx1", type: "transfer", recipient: "John Doe", amount: -150.00, note: "Dinner", status: "completed", date: "2026-06-03" },
@@ -43,8 +44,8 @@ export default function Home() {
   return (
     <div className="container">
       <Header />
-      <div className="dashboard-grid">
-        <div className="flex-column-gap-2">
+      <div className={styles.dashboardGrid}>
+        <div className={styles.flexColumnGap2}>
           <BalanceCard balance={balance} />
           <TransferForm balance={balance} onTransfer={handleTransfer} />
         </div>

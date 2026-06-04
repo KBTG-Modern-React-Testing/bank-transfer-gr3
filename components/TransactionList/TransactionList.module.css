@@ -1,0 +1,175 @@
+.transactionHeader { 
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; 
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between; 
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; 
+  margin-bottom: 1.5rem; 
+}
+.transactionTitle { margin-bottom: 0; }
+.transactionEmpty { text-align: center; padding: 2rem; color: var(--text-secondary); }
+
+.filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.filterBtn {
+  background: var(--filter-btn-bg);
+  border: 1px solid var(--filter-btn-border);
+  color: var(--text-secondary);
+  padding: 0.7rem 1.4rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  -webkit-transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -moz-transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-family: var(--font-family);
+  font-weight: 500;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.filterBtn:hover {
+  background: var(--filter-btn-hover-bg);
+  color: var(--text-primary);
+  -webkit-transform: translateY(-2px);
+  -moz-transform: translateY(-2px);
+  -ms-transform: translateY(-2px);
+  transform: translateY(-2px);
+}
+.filterBtnActive {
+  background: var(--filter-btn-active);
+  color: var(--filter-btn-active-text);
+  border-color: var(--filter-btn-active-border);
+}
+
+.transactionList {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.transactionItem {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 1.4rem;
+  background: var(--tx-item-bg);
+  border: 1px solid var(--tx-item-border);
+  border-radius: 1.5rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.transactionItem:hover {
+  background: var(--tx-item-hover);
+  border-color: var(--tx-item-hover-border);
+  -webkit-transform: translateX(6px);
+  -moz-transform: translateX(6px);
+  -ms-transform: translateX(6px);
+  transform: translateX(6px);
+  -webkit-box-shadow: var(--tx-shadow);
+  -moz-box-shadow: var(--tx-shadow);
+  box-shadow: var(--tx-shadow);
+}
+
+.txInfo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+.txIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 1.2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  background: var(--tx-icon-bg);
+  border: 1px solid var(--tx-icon-border);
+  color: var(--tx-icon-color);
+  -webkit-box-shadow: var(--tx-icon-shadow);
+  -moz-box-shadow: var(--tx-icon-shadow);
+  box-shadow: var(--tx-icon-shadow);
+}
+.txDetailsH4 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+.txDetailsP {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.txAmountStatus {
+  text-align: right;
+}
+.txAmount {
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.5px;
+}
+.txAmountNegative {
+  color: var(--amount-negative);
+}
+.txAmountPositive {
+  color: var(--success);
+}
+.txStatus {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border-radius: 2rem;
+  display: inline-block;
+  margin-top: 0.6rem;
+}
+.statusCompleted {
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+}
+.statusPending {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--warning);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+.statusFailed {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}

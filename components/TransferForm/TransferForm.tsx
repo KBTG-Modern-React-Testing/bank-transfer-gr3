@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, FormEvent, ReactElement } from "react";
+import cardStyles from "../Card/Card.module.css";
+import styles from "./TransferForm.module.css";
 
 interface Props {
   balance: number;
@@ -32,25 +34,25 @@ export default function TransferForm({ balance, onTransfer }: Props): ReactEleme
   };
 
   return (
-    <section className="card">
-      <h2 className="card-title">Transfer Money</h2>
+    <section className={cardStyles.card}>
+      <h2 className={cardStyles.cardTitle}>Transfer Money</h2>
       <form onSubmit={handleTransfer}>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Recipient</label>
           <input 
             type="text" 
-            className="form-control" 
+            className={styles.formControl} 
             placeholder="Name or Email" 
             value={form.recipient}
             onChange={e => setForm({...form, recipient: e.target.value})}
             required
           />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Amount ($)</label>
           <input 
             type="number" 
-            className="form-control" 
+            className={styles.formControl} 
             placeholder="0.00" 
             min="0.01"
             step="0.01"
@@ -59,17 +61,17 @@ export default function TransferForm({ balance, onTransfer }: Props): ReactEleme
             required
           />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Note (Optional)</label>
           <input 
             type="text" 
-            className="form-control" 
+            className={styles.formControl} 
             placeholder="What is this for?" 
             value={form.note}
             onChange={e => setForm({...form, note: e.target.value})}
           />
         </div>
-        <button type="submit" className="btn-primary" disabled={isSubmitting}>
+        <button type="submit" className={styles.btnPrimary} disabled={isSubmitting}>
           {isSubmitting ? 'Processing...' : 'Send Money'}
         </button>
       </form>
