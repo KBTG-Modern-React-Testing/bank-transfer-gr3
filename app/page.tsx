@@ -75,7 +75,7 @@ export default function Home() {
   }
 
   return (
-    <div className="container">
+    <main id="maincontent" className="container">
       <Header />
       <div className={styles.dashboardGrid}>
         <div className={styles.flexColumnGap2}>
@@ -84,6 +84,6 @@ export default function Home() {
         </div>
         <TransactionList transactions={transactions} />
       </div>
-    </div>
+    </main>
   );
 }

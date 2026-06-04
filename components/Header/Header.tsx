@@ -12,7 +12,7 @@ export default function Header(): ReactElement {
           <div className={styles.userGreeting}>Welcome back,</div>
           <div className={styles.userName}>Alex Developer</div>
         </div>
-        <div className={styles.userAvatar}></div>
+        <div className={styles.userAvatar} aria-hidden="true"></div>
       </div>
     </header>
   );
