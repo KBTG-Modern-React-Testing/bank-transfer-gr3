@@ -14,11 +14,13 @@ describe('useBank', () => {
   });
 
   it('loads initial state from repository on mount safely', async () => {
-    const { result } = renderHook(() => useBank());
+    const { result } = renderHook(() => useBank(bankRepository));
     
-    // Wait for the Promise.resolve microtask to execute
+    // Wait for the async fetchData to execute
     await act(async () => {
+      // Flush microtasks
       await Promise.resolve();
+      // Fast forward any internal delays if necessary (not here, just await)
     });
 
     expect(result.current.balance).toBe(12450.75);
@@ -26,7 +28,7 @@ describe('useBank', () => {
   });
 
   it('deducts balance and adds pending transaction immediately on transfer', async () => {
-    const { result } = renderHook(() => useBank());
+    const { result } = renderHook(() => useBank(bankRepository));
     
     await act(async () => {
       await Promise.resolve();
@@ -34,8 +36,8 @@ describe('useBank', () => {
 
     const initialBalance = result.current.balance;
 
-    act(() => {
-      result.current.handleTransfer(500, 'Test User', 'Test Note');
+    await act(async () => {
+      await result.current.handleTransfer(500, 'Test User', 'Test Note');
     });
 
     expect(result.current.balance).toBe(initialBalance - 500);
@@ -45,22 +47,23 @@ describe('useBank', () => {
   });
 
   it('updates pending transaction to completed after 3 seconds', async () => {
-    const { result } = renderHook(() => useBank());
+    const { result } = renderHook(() => useBank(bankRepository));
     
     await act(async () => {
       await Promise.resolve();
     });
 
-    act(() => {
-      result.current.handleTransfer(100, 'Future User', '');
+    await act(async () => {
+      await result.current.handleTransfer(100, 'Future User', '');
     });
 
     const txId = result.current.transactions[0].id;
     expect(result.current.transactions[0].status).toBe('pending');
 
     // Fast-forward timers by 3000ms
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(3000);
+      await Promise.resolve(); // allow microtasks from the timeout to flush
     });
 
     // The transaction should now be completed
