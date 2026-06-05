@@ -18,9 +18,6 @@ export default function TransferForm({
   balance,
   onTransfer,
 }: Props) {
-  // const [form, setForm] = useState({ recipient: "", amount: "", note: "" });
-  // const [isSubmitting, setIsSubmitting] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -41,28 +38,7 @@ export default function TransferForm({
     }
 
     onTransfer(data.amount, data.recipient, data.description ?? "");
-    // reset();
   };
-
-  // const handleTransfer = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   if (!form.recipient || !form.amount) return;
-
-  //   const amountNum = parseFloat(form.amount);
-  //   if (isNaN(amountNum) || amountNum <= 0) return;
-  //   if (amountNum > balance) {
-  //     alert("Insufficient funds!");
-  //     return;
-  //   }
-
-  //   setIsSubmitting(true);
-
-  //   setTimeout(() => {
-  //     onTransfer(amountNum, form.recipient, form.note);
-  //     setForm({ recipient: "", amount: "", note: "" });
-  //     setIsSubmitting(false);
-  //   }, 800);
-  // };
 
   return (
     <section className={cardStyles.card}>
@@ -74,15 +50,13 @@ export default function TransferForm({
             type="text"
             className={styles.formControl}
             placeholder="Name or Email"
-            // value={form.recipient}
-            // onChange={(e) => setForm({ ...form, recipient: e.target.value })}
             {...register("recipient")}
             disabled={isSubmitting}
             required
             aria-required="true"
           />
           {errors.recipient && (
-            <p className="mt-1 text-sm text-red-600">
+            <p className="mt-1 text-sm text-red-500">
               {errors.recipient.message}
             </p>
           )}
@@ -95,8 +69,6 @@ export default function TransferForm({
             placeholder="0.00"
             min="0.01"
             step="0.01"
-            // value={form.amount}
-            // onChange={(e) => setForm({ ...form, amount: e.target.value })}
             {...register("amount", { valueAsNumber: true })}
             disabled={isSubmitting}
             required
@@ -115,8 +87,6 @@ export default function TransferForm({
             placeholder="What is this for?"
             {...register("description")}
             disabled={isSubmitting}
-            // value={form.note}
-            // onChange={(e) => setForm({ ...form, note: e.target.value })}
           />
           {errors.description && (
             <p className="mt-1 text-sm text-red-600">
