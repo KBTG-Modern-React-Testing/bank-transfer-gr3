@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, FormEvent, ReactElement } from "react";
 import cardStyles from "../Card/Card.module.css";
 import styles from "./TransferForm.module.css";
 import {
@@ -18,7 +17,7 @@ interface Props {
 export default function TransferForm({
   balance,
   onTransfer,
-}: Props): ReactElement {
+}: Props) {
   // const [form, setForm] = useState({ recipient: "", amount: "", note: "" });
   // const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -102,7 +101,7 @@ export default function TransferForm({
             disabled={isSubmitting}
             required
             aria-required="true"
-            aria-invalid={errors ? "true" : "false"}
+            aria-invalid={errors.amount ? "true" : "false"}
           />
           {errors.amount && (
             <p className="mt-1 text-sm text-red-600">{errors.amount.message}</p>
