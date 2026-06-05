@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect, ReactElement } from "react";
-import { Transaction, TxStatus } from "../../types";
+import { ReactElement } from "react";
+import { Transaction } from "../../types";
+import { useTransactionPagination } from "../../hooks/useTransactionPagination";
 import cardStyles from "../Card/Card.module.css";
 import styles from "./TransactionList.module.css";
 
@@ -10,37 +11,17 @@ interface Props {
 }
 
 export default function TransactionList({ transactions }: Props): ReactElement {
-  const [filter, setFilter] = useState<TxStatus | "all">("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-
-  const filteredTransactions = useMemo(() => {
-    if (filter === "all") return transactions;
-    return transactions.filter(t => t.status === filter);
-  }, [transactions, filter]);
-
-  const totalPages = Math.ceil(filteredTransactions.length / pageSize) || 1;
-
-  // Reset to page 1 whenever filter or page size changes.
-  useEffect(() => {
-    setTimeout(() => {
-      setCurrentPage(1);
-    }, 0);
-  }, [filter, pageSize]);
-  
-  // Also ensure currentPage does not exceed totalPages if transactions array shrinks
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setTimeout(() => {
-        setCurrentPage(totalPages);
-      }, 0);
-    }
-  }, [totalPages, currentPage]);
-
-  const currentTransactions = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return filteredTransactions.slice(startIndex, startIndex + pageSize);
-  }, [filteredTransactions, currentPage, pageSize]);
+  const {
+    filter,
+    setFilter,
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    setPageSize,
+    currentTransactions,
+    filteredTransactionsCount,
+    totalPages
+  } = useTransactionPagination(transactions);
 
   return (
     <section className={cardStyles.card} aria-labelledby="recent-transactions-heading">
@@ -105,10 +86,10 @@ export default function TransactionList({ transactions }: Props): ReactElement {
         )}
       </ul>
       
-      {filteredTransactions.length > 0 && (
+      {filteredTransactionsCount > 0 && (
         <div className={styles.pagination}>
           <div className={styles.pageInfo}>
-            Page {currentPage} of {totalPages} ({filteredTransactions.length} items)
+            Page {currentPage} of {totalPages} ({filteredTransactionsCount} items)
           </div>
           <div className={styles.pageControls}>
             <select 
