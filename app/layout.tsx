@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import "./globals.css";
 
+import { MSWProvider } from "../components/MSWProvider";
+
 export const metadata: Metadata = {
   title: "React Bank Dashboard",
   description: "Premium banking experience",
@@ -18,7 +20,9 @@ export default function RootLayout({
         <a href="#maincontent" className="skipLink">
           Skip to main content
         </a>
-        {children}
+        <MSWProvider>
+          {children}
+        </MSWProvider>
       </body>
     </html>
   );

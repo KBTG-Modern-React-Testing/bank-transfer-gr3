@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useBank } from '../../hooks/useBank';
-import { bankRepository } from '../../repositories/bankRepository';
+import { remoteBankRepository } from '../../repositories/remoteBankRepository';
 
 describe('useBank', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('useBank', () => {
   });
 
   it('loads initial state from repository on mount safely', async () => {
-    const { result } = renderHook(() => useBank(bankRepository));
+    const { result } = renderHook(() => useBank(remoteBankRepository));
     
     // Wait for the async fetchData to execute
     await act(async () => {
@@ -28,7 +28,7 @@ describe('useBank', () => {
   });
 
   it('deducts balance and adds pending transaction immediately on transfer', async () => {
-    const { result } = renderHook(() => useBank(bankRepository));
+    const { result } = renderHook(() => useBank(remoteBankRepository));
     
     await act(async () => {
       await Promise.resolve();
@@ -47,7 +47,7 @@ describe('useBank', () => {
   });
 
   it('updates pending transaction to completed after 3 seconds', async () => {
-    const { result } = renderHook(() => useBank(bankRepository));
+    const { result } = renderHook(() => useBank(remoteBankRepository));
     
     await act(async () => {
       await Promise.resolve();

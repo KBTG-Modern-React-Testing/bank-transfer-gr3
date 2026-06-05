@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom';
+import { server } from './mocks/server';
+import { beforeAll, afterEach, afterAll } from 'vitest';
 
 // Setup mock for localStorage
 const localStorageMock = (function () {
@@ -22,3 +24,8 @@ const localStorageMock = (function () {
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });
+
+// Setup MSW Server globally for all tests
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
