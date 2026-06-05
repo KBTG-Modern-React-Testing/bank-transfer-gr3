@@ -1,0 +1,43 @@
+.playgroundContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  background: linear-gradient(135deg, var(--header-gradient-1) 0%, var(--header-gradient-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.componentSection {
+  margin-bottom: 4rem;
+  padding: 2rem;
+  background: var(--liquid-glass-bg);
+  border: 1px solid var(--liquid-glass-border);
+  border-radius: 1.5rem;
+  box-shadow: var(--liquid-glass-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--liquid-glass-border);
+  padding-bottom: 0.5rem;
+}
+
+.demoArea {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
