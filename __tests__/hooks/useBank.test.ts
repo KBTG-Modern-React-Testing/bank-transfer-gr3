@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useBank } from '../hooks/useBank';
+import { useBank } from '../../hooks/useBank';
+import { bankRepository } from '../../repositories/bankRepository';
 
 describe('useBank', () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { bankRepository } from '../repositories/bankRepository';
+import { bankRepository } from '../../repositories/bankRepository';
 
 describe('bankRepository', () => {
   beforeEach(() => {

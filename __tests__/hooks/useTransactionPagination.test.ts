@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useTransactionPagination } from '../hooks/useTransactionPagination';
-import { Transaction } from '../types/transaction';
+import { useTransactionPagination } from '../../hooks/useTransactionPagination';
+import { Transaction } from '../../types/transaction';
 
 const mockTransactions: Transaction[] = [
   { id: '1', type: 'transfer', status: 'completed', amount: -10, recipient: 'A', note: '', date: '' },
