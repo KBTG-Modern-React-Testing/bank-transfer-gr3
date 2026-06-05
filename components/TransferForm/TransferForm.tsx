@@ -6,6 +6,7 @@ import cardStyles from "../Card/Card.module.css";
 import styles from "./TransferForm.module.css";
 import {
   createTransactionSchema,
+  sanitizeInput,
   type CreateTransactionInput,
 } from "@/types/transaction";
 
@@ -14,19 +15,27 @@ interface Props {
   onTransfer: (amount: number, recipient: string, note: string) => void;
 }
 
-export default function TransferForm({
-  balance,
-  onTransfer,
-}: Props) {
+export default function TransferForm({ balance, onTransfer }: Props) {
   const {
     register,
     handleSubmit,
     setError,
+    clearErrors,
+    watch,
     formState: { errors, isSubmitting },
-    // reset,
   } = useForm<CreateTransactionInput>({
     resolver: zodResolver(createTransactionSchema),
   });
+
+  const recipientValue = watch("recipient");
+  const descriptionValue = watch("description");
+
+  const handleInputBlur = (fieldName: "recipient" | "description") => {
+    const value = fieldName === "recipient" ? recipientValue : descriptionValue;
+    if (value && /[;'"%]/g.test(value)) {
+      clearErrors(fieldName);
+    }
+  };
 
   const handleTransfer = (data: CreateTransactionInput) => {
     if (data.amount > balance) {
@@ -37,7 +46,11 @@ export default function TransferForm({
       return;
     }
 
-    onTransfer(data.amount, data.recipient, data.description ?? "");
+    // Sanitize inputs before sending to backend
+    const sanitizedRecipient = sanitizeInput(data.recipient);
+    const sanitizedDescription = sanitizeInput(data.description ?? "");
+
+    onTransfer(data.amount, sanitizedRecipient, sanitizedDescription);
   };
 
   return (
@@ -51,9 +64,12 @@ export default function TransferForm({
             className={styles.formControl}
             placeholder="Name or Email"
             {...register("recipient")}
+            onBlur={() => handleInputBlur("recipient")}
             disabled={isSubmitting}
             required
             aria-required="true"
+            aria-invalid={errors.recipient ? "true" : "false"}
+            title="Recipient name or email"
           />
           {errors.recipient && (
             <p className="mt-1 text-sm text-red-500">
@@ -67,7 +83,7 @@ export default function TransferForm({
             type="number"
             className={styles.formControl}
             placeholder="0.00"
-            min="0.01"
+            // min="0.01"
             step="0.01"
             {...register("amount", { valueAsNumber: true })}
             disabled={isSubmitting}
@@ -86,7 +102,10 @@ export default function TransferForm({
             className={styles.formControl}
             placeholder="What is this for?"
             {...register("description")}
+            onBlur={() => handleInputBlur("description")}
             disabled={isSubmitting}
+            aria-invalid={errors.description ? "true" : "false"}
+            title="Transaction note or description"
           />
           {errors.description && (
             <p className="mt-1 text-sm text-red-600">
