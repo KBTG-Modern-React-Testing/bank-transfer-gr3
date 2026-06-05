@@ -117,10 +117,7 @@ export default function TransactionList({ transactions }: Props): ReactElement {
                 </div>
                 <div className={styles.txAmountStatus}>
                   <div className={`${styles.txAmount} ${amountClass}`}>
-                    {amountText.toLocaleString("en-US", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    {amountText}
                   </div>
                   <div className={`${styles.txStatus} ${statusClass}`}>
                     {tx.status}
