@@ -1,10 +1,20 @@
-import { useState, useMemo, useEffect } from "react";
-import { Transaction, TxStatus } from "../types";
+import { useState, useMemo } from "react";
+import { Transaction, TxStatus } from "../types/transaction";
 
 export function useTransactionPagination(transactions: Transaction[]) {
-  const [filter, setFilter] = useState<TxStatus | "all">("all");
+  const [filter, setFilterState] = useState<TxStatus | "all">("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSizeState] = useState(5);
+
+  const setFilter = (newFilter: TxStatus | "all") => {
+    setFilterState(newFilter);
+    setCurrentPage(1); // Handle page reset on changeable point instantly
+  };
+
+  const setPageSize = (newSize: number) => {
+    setPageSizeState(newSize);
+    setCurrentPage(1); // Handle page reset on changeable point instantly
+  };
 
   const filteredTransactions = useMemo(() => {
     if (filter === "all") return transactions;
@@ -12,32 +22,17 @@ export function useTransactionPagination(transactions: Transaction[]) {
   }, [transactions, filter]);
 
   const totalPages = Math.ceil(filteredTransactions.length / pageSize) || 1;
-
-  // Reset to page 1 whenever filter or page size changes.
-  useEffect(() => {
-    setTimeout(() => {
-      setCurrentPage(1);
-    }, 0);
-  }, [filter, pageSize]);
-  
-  // Also ensure currentPage does not exceed totalPages if transactions array shrinks
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setTimeout(() => {
-        setCurrentPage(totalPages);
-      }, 0);
-    }
-  }, [totalPages, currentPage]);
+  const safeCurrentPage = Math.min(currentPage, totalPages); // Derived safely on render
 
   const currentTransactions = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
+    const startIndex = (safeCurrentPage - 1) * pageSize;
     return filteredTransactions.slice(startIndex, startIndex + pageSize);
-  }, [filteredTransactions, currentPage, pageSize]);
+  }, [filteredTransactions, safeCurrentPage, pageSize]);
 
   return {
     filter,
     setFilter,
-    currentPage,
+    currentPage: safeCurrentPage,
     setCurrentPage,
     pageSize,
     setPageSize,

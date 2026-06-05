@@ -8,11 +8,7 @@ import styles from "./page.module.css";
 import { useBank } from "../hooks/useBank";
 
 export default function Home() {
-  const { balance, transactions, isLoaded, handleTransfer } = useBank();
-
-  if (!isLoaded) {
-    return <div className="container" style={{ minHeight: '100vh' }} />;
-  }
+  const { balance, transactions, handleTransfer } = useBank();
 
   return (
     <div className="container">
