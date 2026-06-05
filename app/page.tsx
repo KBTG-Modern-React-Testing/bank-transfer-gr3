@@ -6,9 +6,10 @@ import TransferForm from "../components/TransferForm/TransferForm";
 import TransactionList from "../components/TransactionList/TransactionList";
 import styles from "./page.module.css";
 import { useBank } from "../hooks/useBank";
+import { bankRepository } from "../repositories/bankRepository";
 
 export default function Home() {
-  const { balance, transactions, handleTransfer } = useBank();
+  const { balance, transactions, handleTransfer } = useBank(bankRepository);
 
   return (
     <div className="container">

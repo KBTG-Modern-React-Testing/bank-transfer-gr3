@@ -1,23 +1,33 @@
 import { useState, useEffect } from "react";
 import { Transaction } from "../types/transaction";
-import { bankRepository } from "../repositories/bankRepository";
+import { IBankRepository } from "../repositories/IBankRepository";
 
-export function useBank() {
+export function useBank(repository: IBankRepository) {
   const [balance, setBalance] = useState<number>(12450.75);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // Load from repository on mount safely
+  // Load from repository on mount asynchronously
   useEffect(() => {
-    Promise.resolve().then(() => {
-      setBalance(bankRepository.getBalance());
-      setTransactions(bankRepository.getTransactions());
-    });
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [fetchedBalance, fetchedTxs] = await Promise.all([
+          repository.getBalance(),
+          repository.getTransactions()
+        ]);
+        setBalance(fetchedBalance);
+        setTransactions(fetchedTxs);
+      } catch (err) {
+        console.error("Failed to fetch bank data:", err);
+      }
+    };
+    
+    fetchData();
+  }, [repository]);
 
-  const handleTransfer = (amountNum: number, recipient: string, note: string) => {
+  const handleTransfer = async (amountNum: number, recipient: string, note: string) => {
+    // 1. Optimistic UI Updates
     const newBalance = balance - amountNum;
     setBalance(newBalance);
-    bankRepository.saveBalance(newBalance);
 
     const newTx: Transaction = {
       id: `tx${Date.now()}`,
@@ -31,13 +41,24 @@ export function useBank() {
     
     const newTransactions = [newTx, ...transactions];
     setTransactions(newTransactions);
-    bankRepository.saveTransactions(newTransactions);
 
-    // Simulate status change after a while
-    setTimeout(() => {
+    // 2. Asynchronous Remote/Local Storage Persistence
+    try {
+      await Promise.all([
+        repository.saveBalance(newBalance),
+        repository.saveTransactions(newTransactions)
+      ]);
+    } catch (err) {
+      console.error("Failed to save transaction state:", err);
+      // In a real app, you would rollback the state here
+    }
+
+    // 3. Simulate external status change after a delay
+    setTimeout(async () => {
       setTransactions(curr => {
         const updated = curr.map(t => t.id === newTx.id ? { ...t, status: "completed" as const } : t);
-        bankRepository.saveTransactions(updated);
+        // Save the updated list asynchronously without blocking UI
+        repository.saveTransactions(updated).catch(console.error);
         return updated;
       });
     }, 3000);
